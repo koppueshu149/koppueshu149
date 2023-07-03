@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @koppueshu149
+ee- 👋 Hi, I’m @koppueshu149
 - 👀 I’m interested in ...
 - 🌱 I’m currently learning ...
 - 💞️ I’m looking to collaborate on ...
@@ -220,7 +220,33 @@ public class GatewayController {
     }
 
     private String prepareResponse(String firstApiResponse, String secondApiResponse) {
-        // Combine the data from both APIs into a single response string
+        // Combine the data from both APIs into a single response string  @Controller
+public class GatewayController {
+
+    @Autowired
+    private DataService dataService;
+
+    @GetMapping("/api/data/{id}")
+    @ResponseBody
+    public String getData(@PathVariable String id) {
+        DataModel data = dataService.getDataById(id);
+
+        // Prepare the response string
+        String response = prepareResponse(data);
+
+        return response;
+    }
+
+    private String prepareResponse(DataModel data) {
+        // Build the response string using the data
+        StringBuilder responseBuilder = new StringBuilder();
+        responseBuilder.append("Data ID: ").append(data.getId()).append("\n");
+        responseBuilder.append("Data Name: ").append(data.getName()).append("\n");
+        // Add more fields as needed
+
+        return responseBuilder.toString();
+    }
+} 
         String response = "First API Response: " + firstApiResponse + "\n";
         response += "Second API Response: " + secondApiResponse;
 
