@@ -259,3 +259,32 @@ public class GatewayController {
     }
 }
 
+
+
+
+
+@PostMapping("/api/data")
+public ResponseEntity<String> processData(@RequestBody String requestBody) {
+    // Perform validation on the request body
+    if (requestBody == null || requestBody.isEmpty()) {
+        return ResponseEntity.badRequest().body("Invalid request body");
+    }
+
+    // Parse the request body into a JSON object
+    JsonObject jsonObject;
+    try {
+        jsonObject = new JsonParser().parse(requestBody).getAsJsonObject();
+    } catch (JsonSyntaxException e) {
+        return ResponseEntity.badRequest().body("Invalid JSON format");
+    }
+
+    // Extract data from the JSON object
+    String name = jsonObject.get("name").getAsString();
+    int age = jsonObject.get("age").getAsInt();
+
+    // Pass the data to other components for further processing
+    dataService.processData(name, age);
+
+    // Return a response
+    return ResponseEntity.ok("Data processed successfully");
+}
