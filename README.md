@@ -34,3 +34,196 @@ public class GatewayConfig implements WebMvcConfigurer {
         return configurer;
     }
 }
+
+
+
+
+
+
+this is mine ..
+
+plugins {
+    id 'org.springframework.boot' version '2.5.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+
+User.java
+
+package com.example.model;
+
+public class User {
+    private Long id;
+    private String name;
+    private String email;
+
+    public User() {
+    }
+
+    public User(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    // Getters and setters
+}
+
+
+UserController.java
+package com.example.controller;
+
+import com.example.model.User;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) {
+        User user = new User(id, "John Doe", "johndoe@example.com");
+        return user;
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        // Logic to create the user in the database
+        // For simplicity, let's assume the user is created and returned as is
+        return user;
+    }
+}
+
+
+GatewayConfig.java
+package com.example.gateway;
+
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class GatewayConfig {
+
+    @Bean
+    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+        return builder.routes()
+                .route("user-service", r -> r.path("/users/**")
+                        .uri("http://localhost:8080"))
+                .build();
+    }
+}
+
+Application.java
+package com.example;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+@SpringBootApplication
+@EnableDiscoveryClient
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+
+
+
+
+Updated user.java
+public class User {
+    private Long id;
+    private String name;
+    private String email;
+
+    public User() {
+    }
+
+    public User(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+
+
+
+
+
+this us ashritha 
+
+@Controller
+public class GatewayController {
+
+    @Autowired
+    private FirstApiService firstApiService;
+
+    @Autowired
+    private SecondApiService secondApiService;
+
+    @GetMapping("/api/data")
+    @ResponseBody
+    public String getData() {
+        // Call the first API and retrieve data
+        String firstApiResponse = firstApiService.getData();
+        
+        // Call the second API and retrieve data
+        String secondApiResponse = secondApiService.getData();
+
+        // Prepare the response string
+        String response = prepareResponse(firstApiResponse, secondApiResponse);
+
+        return response;
+    }
+
+    private String prepareResponse(String firstApiResponse, String secondApiResponse) {
+        // Combine the data from both APIs into a single response string
+        String response = "First API Response: " + firstApiResponse + "\n";
+        response += "Second API Response: " + secondApiResponse;
+
+        return response;
+    }
+}
