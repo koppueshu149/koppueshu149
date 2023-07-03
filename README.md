@@ -227,3 +227,35 @@ public class GatewayController {
         return response;
     }
 }
+
+
+
+
+@Controller
+public class GatewayController {
+
+    @Autowired
+    private DataService dataService;
+
+    @GetMapping("/api/data/{id}")
+    @ResponseBody
+    public String getData(@PathVariable String id) {
+        DataModel data = dataService.getDataById(id);
+
+        // Prepare the response string
+        String response = prepareResponse(data);
+
+        return response;
+    }
+
+    private String prepareResponse(DataModel data) {
+        // Build the response string using the data
+        StringBuilder responseBuilder = new StringBuilder();
+        responseBuilder.append("Data ID: ").append(data.getId()).append("\n");
+        responseBuilder.append("Data Name: ").append(data.getName()).append("\n");
+        // Add more fields as needed
+
+        return responseBuilder.toString();
+    }
+}
+
