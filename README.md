@@ -288,3 +288,36 @@ public ResponseEntity<String> processData(@RequestBody String requestBody) {
     // Return a response
     return ResponseEntity.ok("Data processed successfully");
 }
+
+
+
+
+4th july ashritha 
+
+@RestController
+public class GatewayController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @GetMapping("/api/data")
+    public String getData() {
+        // Call the first API
+        String firstAPIUrl = "http://localhost:8080/api/first";
+        ResponseEntity<String> firstAPIResponse = restTemplate.getForEntity(firstAPIUrl, String.class);
+        String firstAPIData = firstAPIResponse.getBody();
+
+        // Call the second API
+        String secondAPIUrl = "http://localhost:8080/api/second";
+        ResponseEntity<String> secondAPIResponse = restTemplate.getForEntity(secondAPIUrl, String.class);
+        String secondAPIData = secondAPIResponse.getBody();
+
+        // Process the data or combine the responses
+        String combinedData = firstAPIData + " " + secondAPIData;
+
+        // Render the combined data using Apache Velocity template
+        // ...
+
+        return combinedData;
+    }
+}
