@@ -321,3 +321,133 @@ public class GatewayController {
         return combinedData;
     }
 }
+
+
+
+
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/xapi")
+public class PassThroughController {
+    private final ProcessAPIService processAPIService;
+
+    @Autowired
+    public PassThroughController(ProcessAPIService processAPIService) {
+        this.processAPIService = processAPIService;
+    }
+
+    @RequestMapping(value = "/{endpoint}", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> handleRequest(@PathVariable("endpoint") String endpoint,
+                                                @RequestParam("param1") String param1,
+                                                @RequestParam("param2") int param2,
+                                                @RequestBody RequestBodyType requestBody,
+                                                @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        // Map the headers to the corresponding process API request objects
+        HttpHeaders processAPIHeaders = new HttpHeaders();
+        processAPIHeaders.set(HttpHeaders.AUTHORIZATION, authorizationHeader);
+
+        // Map the parameters and headers to the corresponding process API request objects
+        ProcessAPIRequest processAPIRequest = new ProcessAPIRequest();
+        processAPIRequest.setParam1(param1);
+        processAPIRequest.setParam2(param2);
+        processAPIRequest.setRequestBody(requestBody);
+        processAPIRequest.setHeaders(processAPIHeaders);
+
+        // Invoke the appropriate process API using the mapped request
+        ProcessAPIResponse response = processAPIService.invokeProcessAPI(endpoint, processAPIRequest);
+
+        // Map the response from the process API to the pass-through API response
+        ResponseEntity<String> passThroughResponse = ResponseEntity.ok(response.getResponseBody());
+
+        return passThroughResponse;
+    }
+}
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/xapi")
+public class PassThroughController {
+    private final ProcessAPIService processAPIService;
+    private final String apiKey; // Assuming the API key is stored in a configuration file or environment variable
+
+    public PassThroughController(ProcessAPIService processAPIService, @Value("${api.key}") String apiKey) {
+        this.processAPIService = processAPIService;
+        this.apiKey = apiKey;
+    }
+
+    @RequestMapping(value = "/{endpoint}", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> handleRequest(@PathVariable("endpoint") String endpoint,
+                                                @RequestParam("param1") String param1,
+                                                @RequestParam("param2") int param2,
+                                                @RequestBody RequestBodyType requestBody,
+                                                @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        // Validate the API key in the Authorization header
+        if (!authorizationHeader.equals("Bearer " + apiKey)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Map the parameters and headers to the corresponding process API request objects
+        ProcessAPIRequest processAPIRequest = new ProcessAPIRequest();
+        processAPIRequest.setParam1(param1);
+        processAPIRequest.setParam2(param2);
+        processAPIRequest.setRequestBody(requestBody);
+
+        // Invoke the appropriate process API using the mapped request
+        ProcessAPIResponse response = processAPIService.invokeProcessAPI(endpoint, processAPIRequest);
+
+        // Map the response from the process API to the pass-through API response
+        ResponseEntity<String> passThroughResponse = ResponseEntity.ok(response.getResponseBody());
+
+        return passThroughResponse;
+    }
+}
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/xapi")
+public class PassThroughController {
+    private final ProcessAPIService processAPIService;
+
+    @Autowired
+    public PassThroughController(ProcessAPIService processAPIService) {
+        this.processAPIService = processAPIService;
+    }
+
+    @RequestMapping(value = "/{endpoint}", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> handleRequest(@PathVariable("endpoint") String endpoint,
+                                                @RequestParam("param1") String param1,
+                                                @RequestParam("param2") int param2,
+                                                @RequestBody RequestBodyType requestBody) {
+        // Map the parameters to the corresponding process API request objects
+        ProcessAPIRequest processAPIRequest = new ProcessAPIRequest();
+        processAPIRequest.setParam1(param1);
+        processAPIRequest.setParam2(param2);
+        processAPIRequest.setRequestBody(requestBody);
+
+        // Invoke the appropriate process API using the mapped request
+        ProcessAPIResponse response = processAPIService.invokeProcessAPI(endpoint, processAPIRequest);
+
+        // Map the response from the process API to the pass-through API response
+        ResponseEntity<String> passThroughResponse = ResponseEntity.ok(response.getResponseBody());
+
+        return passThroughResponse;
+    }
+}
