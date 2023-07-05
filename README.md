@@ -451,3 +451,65 @@ public class PassThroughController {
         return passThroughResponse;
     }
 }
+
+
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+
+@RestController
+public class GatewayController {
+    
+    private static final String JSON_FILE_PATH = "path/to/json/file.json";
+
+    @PostMapping("/{papi}/**")
+    public String handleRequest(@PathVariable("papi") String papi, HttpServletRequest request, @RequestBody String requestBody) throws IOException {
+        String endpoint = extractEndpoint(request);
+        String artifactId = extractArtifactIdFromRequest(requestBody);
+        JsonNode matchedObject = findMatchingObject(artifactId);
+        String downstreamUrl = matchedObject.get("downstream-url").asText();
+        String methodPath = matchedObject.get("methods").get("path").asText();
+        String uri = downstreamUrl + methodPath;
+        return "API Name: " + papi + ", Endpoint: " + endpoint + ", Downstream URI: " + uri;
+    }
+
+    private String extractEndpoint(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        String endpoint = requestURI.substring(requestURI.indexOf("/", 1));
+        return endpoint;
+    }
+
+    private String extractArtifactIdFromRequest(String requestBody) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(requestBody);
+        String artifactId = jsonNode.get("artifactId").asText();
+        return artifactId;
+    }
+
+    private JsonNode findMatchingObject(String artifactId) throws IOException {
+        byte[] jsonData = Files.readAllBytes(Paths.get(JSON_FILE_PATH));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(jsonData);
+        JsonNode matchedObject = null;
+        
+        // Iterate through the JSON objects and find the matching artifact ID
+        for (JsonNode node : jsonNode) {
+            if (node.get("artifactId").asText().equals(artifactId)) {
+                matchedObject = node;
+                break;
+            }
+        }
+        
+        return matchedObject;
+    }
+}
