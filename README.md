@@ -513,3 +513,71 @@ public class GatewayController {
         return matchedObject;
     }
 }
+
+
+
+
+
+6th july ashrita 
+
+
+@RestController
+public class MyController {
+    private final ArtifactService artifactService;
+
+    public MyController(ArtifactService artifactService) {
+        this.artifactService = artifactService;
+    }
+
+    @GetMapping("/artifacts/{id}")
+    public ResponseEntity<Artifact> getArtifactById(@PathVariable String id) {
+        try {
+            Artifact artifact = artifactService.getArtifactById(id);
+            if (artifact != null) {
+                return ResponseEntity.ok(artifact);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+}
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+public class ArtifactService {
+    private static final String ARTIFACTS_FILE = "artifacts.json";
+
+    public Artifact getArtifactById(String artifactId) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(ARTIFACTS_FILE);
+
+        List<Artifact> artifacts = Arrays.asList(objectMapper.readValue(inputStream, Artifact[].class));
+
+        Optional<Artifact> optionalArtifact = artifacts.stream()
+                .filter(artifact -> artifact.getId().equals(artifactId))
+                .findFirst();
+
+        return optionalArtifact.orElse(null);
+    }
+}
+
+
+
+
+public class Artifact {
+    private String id;
+    private String name;
+    private String field1;
+    private String field2;
+
+    // Getters and setters
+}
+
