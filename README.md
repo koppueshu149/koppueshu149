@@ -581,3 +581,52 @@ public class Artifact {
     // Getters and setters
 }
 
+
+
+
+
+
+
+ashritha 
+
+
+public class ArtifactInfo {
+    @JsonProperty("API_name")
+    private String apiName;
+    @JsonProperty("artifact-id")
+    private String artifactId;
+    private String stash;
+    private String description;
+    @JsonProperty("methods")
+    private List<Method> methods;
+    @JsonProperty("downstream-url")
+    private String downstreamUrl;
+
+    // Getters and setters
+}
+
+
+public class Method {
+    private String name;
+    private String path;
+    private String description;
+
+    // Getters and setters
+}
+
+
+ArtifactInfo artifactInfo = apis.getArtifactInfoMap().get("bscustonbrdaqat-xapi");
+
+ObjectMapper objectMapper = new ObjectMapper();
+Apis apis = objectMapper.readValue(jsonString, Apis.class);
+
+
+public class Method {
+    private String name;
+    private String path;
+    private String description;
+
+    // Getters and setters
+}
+
+
