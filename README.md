@@ -630,3 +630,73 @@ public class Method {
 }
 
 
+
+eshu 7 july
+
+jsonreador class 
+
+
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+
+@RestController
+public class ApiController {
+
+    private final JSONReader jsonReader;
+
+    public ApiController(JSONReader jsonReader) {
+        this.jsonReader = jsonReader;
+    }
+
+    @GetMapping("/api/{artifactId}/downstream-url")
+    public String getDownstreamURL(@PathVariable String artifactId) {
+        try {
+            return jsonReader.getDownstreamURL(artifactId);
+        } catch (IOException e) {
+            // Handle the exception
+            return null; // or return an error response
+        }
+    }
+}
+
+
+
+
+api controller class
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+
+@RestController
+public class ApiController {
+
+    private final JSONReader jsonReader;
+
+    public ApiController(JSONReader jsonReader) {
+        this.jsonReader = jsonReader;
+    }
+
+    @GetMapping("/api/{artifactId}/downstream-url")
+    public String getDownstreamURL(@PathVariable String artifactId) {
+        try {
+            String downstreamURL = jsonReader.getDownstreamURL(artifactId);
+            if (downstreamURL != null) {
+                return "Downstream URL: " + downstreamURL;
+            } else {
+                return "Artifact ID not found.";
+            }
+        } catch (IOException e) {
+            // Handle the exception
+            return "Error occurred while retrieving the downstream URL.";
+        }
+    }
+}
