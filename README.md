@@ -700,3 +700,30 @@ public class ApiController {
         }
     }
 }
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
+public class JSONReader {
+
+    private static final String JSON_FILE_PATH = "/path/to/your/json/file.json";
+
+    public String getDownstreamURL(String artifactId) throws IOException {
+        byte[] jsonData = Files.readAllBytes(Paths.get(JSON_FILE_PATH));
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, API> apiMap = objectMapper.readValue(jsonData, new TypeReference<Map<String, API>>() {});
+
+        API api = apiMap.get(artifactId);
+        if (api != null) {
+            return api.getDownstream_url();
+        } else {
+            return null; // or handle the case when the artifact ID is not found
+        }
+    }
+}
+
