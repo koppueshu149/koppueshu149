@@ -1,3 +1,7 @@
+
+
+
+
 - 👋 Hi, I’m @koppueshu149
 - 👀 I’m interested in ...
 - 🌱 I’m currently learning ...
@@ -726,4 +730,33 @@ public class JSONReader {
         }
     }
 }
+
+
+
+
+
+
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+
+public class TruststoreVerification {
+    public static void main(String[] args) throws Exception {
+        KeyStore truststore = KeyStore.getInstance("JKS");
+        truststore.load(new FileInputStream("/path/to/truststore.jks"), "truststore_password".toCharArray());
+        
+        String alias = "your_alias";
+        Certificate certificate = truststore.getCertificate(alias);
+        
+        // Verify the certificate details
+        System.out.println("Certificate Subject: " + certificate.getSubjectDN());
+        System.out.println("Certificate Issuer: " + certificate.getIssuerDN());
+        System.out.println("Certificate Serial Number: " + certificate.getSerialNumber());
+    }
+}
+
+
+
+
+System.setProperty("javax.net.ssl.trustStore", "/path/to/truststore.jks");
+System.setProperty("javax.net.ssl.trustStorePassword", "truststore_password");
 
