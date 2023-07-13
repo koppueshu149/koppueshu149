@@ -760,3 +760,56 @@ public class TruststoreVerification {
 System.setProperty("javax.net.ssl.trustStore", "/path/to/truststore.jks");
 System.setProperty("javax.net.ssl.trustStorePassword", "truststore_password");
 
+
+
+
+
+
+
+
+
+wiremock
+
+package com.your.project.integration.wiremock;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
+public class YourWireMockTest {
+
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
+
+    @Before
+    public void setup() {
+        configureFor(wireMockRule.port());
+    }
+
+    @Test
+    public void testYourAPIEndpoint() {
+        // Configure the mock request and response
+        stubFor(get(urlEqualTo("/api/endpoint"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withBody("{\"message\": \"Mocked response\"}")));
+
+        // Make a request to the mock API endpoint
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "http://localhost:" + wireMockRule.port() + "/api/endpoint";
+        String response = restTemplate.getForObject(apiUrl, String.class);
+
+        // Assertions or further processing
+        // ...
+    }
+}
+
+
