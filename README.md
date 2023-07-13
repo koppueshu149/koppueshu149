@@ -813,3 +813,25 @@ public class YourWireMockTest {
 }
 
 
+
+
+mappings.json
+
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/api/endpoint"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Mocked response\"}"
+      }
+    }
+  ]
+}
+
