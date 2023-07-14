@@ -835,3 +835,50 @@ mappings.json
   ]
 }
 
+
+
+
+14 July ashritha
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class YourControllerTest {
+
+    @LocalServerPort
+    private int port;
+
+    private static WireMockServer wireMockServer;
+
+    @BeforeAll
+    public static void setup() {
+        wireMockServer = new WireMockServer(options().dynamicPort());
+        wireMockServer.start();
+        WireMock.configureFor(wireMockServer.port());
+    }
+
+    @AfterAll
+    public static void teardown() {
+        wireMockServer.stop();
+    }
+
+    @Test
+    public void testEndpoint() {
+        // Configure the mock request and response
+        WireMock.stubFor(WireMock.post(WireMock.urlEqualTo("/api/endpoint"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"message\": \"Mocked response\"}")));
+
+        // Your test code here
+    }
+}
