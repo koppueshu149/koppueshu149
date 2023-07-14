@@ -882,3 +882,72 @@ public class YourControllerTest {
         // Your test code here
     }
 }
+
+
+
+.............
+
+
+
+
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@TestPropertySource(locations = "classpath:application-test.properties")
+public class YourControllerTest {
+
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    private static WireMockServer wireMockServer;
+
+    @BeforeAll
+    public static void setup() {
+        wireMockServer = new WireMockServer(options().dynamicPort());
+        wireMockServer.start();
+        WireMock.configureFor(wireMockServer.port());
+    }
+
+    @AfterAll
+    public static void teardown() {
+        wireMockServer.stop();
+    }
+
+    @Test
+    public void testEndpoint() throws Exception {
+        // Configure the mock request and response
+        WireMock.stubFor(WireMock.post(WireMock.urlEqualTo("/api/endpoint"))
+                .withRequestBody(WireMock.equalToJson("{\"key\": \"value\"}"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"message\": \"Mocked response\"}")));
+
+        // Perform the request and validate the response
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/endpoint")
+                .content("{\"key\": \"value\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("{\"message\": \"Mocked response\"}"));
+    }
+}
