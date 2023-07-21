@@ -1,3 +1,35 @@
+
+flow of functions (like raising requests for a software), and also the dynamics and tech stack(C#, .NET) that is best suited to build a real time application with the help of my mentors.
+
+Interacted with my mentors and respective colleagues with undecisive expectation and then followed their professional advice whether it might be about the project or the business structure of Barclays. an
+
+Understood the requirements of the stakeholders and acted
+
+accordingly by developing the application with multiple
+
+scrums with my mentors and fellow interns.
+
+
+
+
+
+
+in terms of reputational, legal and operational perspective and I'm
+
+aware enough on how to mitigate such risks.
+
+I store all the data in the company's storage devices and do not disclose data/information regarding the project other
+
+than the designated team.
+
+I always try to communicate through Microsoft Teams and maintain integrity among conversations.
+
+I accept the risk as my own responsibility and contact my mentors and line manager as soon as possible to mitigate the
+
+concerned risk. I communicate and take help from tech bars in order to resolve risks suggested my mentors.
+
+
+
 Shared Chat
 •
 Model: Default
