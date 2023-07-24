@@ -1,4 +1,64 @@
 
+fieldmapping util
+
+import org.apache.velocity.app.Velocity;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class FieldMappingUtil {
+
+    private static final String REQUEST_TEMPLATES_PATH = "templates/request";
+    private static final String RESPONSE_TEMPLATES_PATH = "templates/response";
+
+    // Method to load Velocity templates for requests and responses
+    public static void loadVelocityTemplates() {
+        try {
+            // Load request templates
+            loadTemplates(REQUEST_TEMPLATES_PATH);
+
+            // Load response templates
+            loadTemplates(RESPONSE_TEMPLATES_PATH);
+
+            // Initialize Velocity engine
+            Velocity.init();
+        } catch (Exception e) {
+            // Handle exceptions appropriately
+            e.printStackTrace();
+        }
+    }
+
+    // Method to load templates from a specific folder path
+    private static void loadTemplates(String folderPath) throws IOException {
+        File folder = new File(folderPath);
+        if (folder.exists() && folder.isDirectory()) {
+            File[] templateFiles = folder.listFiles();
+            if (templateFiles != null) {
+                for (File templateFile : templateFiles) {
+                    String templateName = templateFile.getName();
+                    String templateContent = new String(Files.readAllBytes(templateFile.toPath()), StandardCharsets.UTF_8);
+                    // Register the template with Velocity under the given template name
+                    Velocity.putTemplate(templateName, templateContent);
+                }
+            }
+        }
+    }
+
+    // Other methods for request and response field mapping can go here...
+}
+
+
+
+
+
+
+
+
+
 flow of functions (like raising requests for a software), and also the dynamics and tech stack(C#, .NET) that is best suited to build a real time application with the help of my mentors.
 
 Interacted with my mentors and respective colleagues with undecisive expectation and then followed their professional advice whether it might be about the project or the business structure of Barclays. an
