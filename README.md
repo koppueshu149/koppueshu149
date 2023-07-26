@@ -1,4 +1,62 @@
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+
+import java.io.StringWriter;
+import java.util.Map;
+
+public class FieldMappingExample {
+    public static void main(String[] args) {
+        // Assume you receive the request data as a JSON string
+        String incomingRequestData = "{...}";
+
+        // Step 1: Create the Velocity engine and load the template
+        VelocityEngine velocityEngine = new VelocityEngine();
+        velocityEngine.init();
+
+        // Load the template with the field mappings
+        String velocityTemplate = "mapping_template.vm";
+        Template template = velocityEngine.getTemplate(velocityTemplate);
+
+        // Step 2: Prepare the data to be passed to the template
+        VelocityContext velocityContext = new VelocityContext();
+
+        // Convert the incoming JSON data to a Map (you may use a JSON parsing library)
+        Map<String, Object> requestDataMap = parseJsonData(incomingRequestData);
+
+        // Add the requestDataMap to the Velocity context
+        velocityContext.put("data", requestDataMap);
+
+        // Step 3: Render the template for field mapping
+        StringWriter writer = new StringWriter();
+        template.merge(velocityContext, writer);
+
+        // Get the transformed request data from the writer
+        String transformedRequestData = writer.toString();
+
+        // Now you have the transformed data, and you can send it to the downstream API
+        sendToDownstreamAPI(transformedRequestData);
+    }
+
+    // This method is just an example, you should use a proper JSON parsing library
+    private static Map<String, Object> parseJsonData(String jsonData) {
+        // Parse your JSON data here and return a Map representation
+        // This is just a dummy example:
+        return new HashMap<>();
+    }
+
+    // Method to send the transformed data to the downstream API
+    private static void sendToDownstreamAPI(String requestData) {
+        // Implement your logic to send the data to the downstream API
+        // For this example, we'll just print the transformed data
+        System.out.println(requestData);
+    }
+}
+
+
+
+
 fieldmapping util
 
 import org.apache.velocity.app.Velocity;
