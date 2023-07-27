@@ -1,4 +1,61 @@
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class JsonToStringConverter {
+
+    public static void main(String[] args) {
+        String fileName = "data.json";
+        String jsonString = convertJsonFileToString(fileName);
+
+        // Now you have the JSON object as a string
+        System.out.println(jsonString);
+    }
+
+    public static String convertJsonFileToString(String fileName) {
+        try {
+            // Read the JSON content from the file
+            String jsonContent = new String(Files.readAllBytes(Paths.get(fileName)));
+
+            // Parse the JSON content into a Java object
+            ObjectMapper objectMapper = new ObjectMapper();
+            Object jsonObject = objectMapper.readValue(jsonContent, Object.class);
+
+            // Convert the Java object back to a JSON string
+            String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+
+            // Optionally, you can render the JSON string using Apache Velocity templates
+            Velocity.init();
+            VelocityContext context = new VelocityContext();
+            context.put("jsonString", jsonString);
+
+            Template template = Velocity.getTemplate("templates/json_template.vm");
+            StringWriter writer = new StringWriter();
+            template.merge(context, writer);
+
+            return writer.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
