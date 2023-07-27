@@ -1,3 +1,66 @@
+27 july 
+
+private String createNewRequestBodyForProcessEndpoint1(String extractedValue1, String extractedValue2) {
+    VelocityContext velocityContext = new VelocityContext();
+    velocityContext.put("field1", extractedValue1);
+    velocityContext.put("field2", extractedValue2);
+
+    // Load the template for "processEndpoint1" from the endpointRequestBodies map
+    String template = endpointRequestBodies.get("processEndpoint1").toString();
+
+    // Evaluate the Velocity template with the given context to create the new request body
+    return evaluateVelocityTemplate(template, velocityContext);
+}
+
+
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapType;
+
+@RestController
+public class YourController {
+
+    private Map<String, Object> endpointRequestBodies;
+
+    @Autowired
+    private VelocityEngine velocityEngine;
+
+    @PostConstruct
+    public void initialize() {
+        // Load JSON files and store their contents in the endpointRequestBodies map
+        ObjectMapper objectMapper = new ObjectMapper();
+        endpointRequestBodies = new HashMap<>();
+
+        try {
+            // Load processEndpoint1.json and store its content in the map
+            InputStream endpoint1Stream = getClass().getClassLoader().getResourceAsStream("processEndpoint1.json");
+            MapType mapType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class);
+            Map<String, Object> endpoint1RequestBody = objectMapper.readValue(endpoint1Stream, mapType);
+            endpointRequestBodies.put("processEndpoint1", endpoint1RequestBody);
+
+            // Load processEndpoint2.json and store its content in the map
+            // Repeat this for other JSON files and endpoints as needed
+            // ...
+
+        } catch (IOException e) {
+            // Handle any IOException or file reading errors
+            e.printStackTrace();
+        }
+    }
+
+    // ... (the rest of your controller code)
+}
+
+
+
+
+
+
+
+
+
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.velocity.Template;
