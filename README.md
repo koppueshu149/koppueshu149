@@ -1,3 +1,43 @@
+28  july ash
+
+import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.ui.velocity.VelocityEngineFactoryBean;
+
+@Configuration
+public class VelocityConfig {
+
+    @Autowired
+    private VelocityEngine velocityEngine;
+
+    @Bean
+    public VelocityEngine velocityEngine() {
+        VelocityEngineFactoryBean factoryBean = new VelocityEngineFactoryBean();
+        // Set the path to the directory containing the Velocity templates
+        factoryBean.setResourceLoaderPath("classpath:/templates");
+        try {
+            return factoryBean.createVelocityEngine();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize Velocity engine", e);
+        }
+    }
+
+    @PostConstruct
+    public void loadVelocityTemplate() {
+        try {
+            velocityEngine.init();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize Velocity template", e);
+        }
+    }
+}
+
+
+
+
+
 27 july 
 
 private String createNewRequestBodyForProcessEndpoint1(String extractedValue1, String extractedValue2) {
