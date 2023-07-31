@@ -1,3 +1,62 @@
+31 july
+
+As an AI language model, I don't have direct access to your project or Confluence, but I can guide you on how to write documentation for your project in Confluence. Here's a general outline of the documentation structure you can follow:
+
+Project Overview:
+
+Provide a brief introduction to the project.
+Mention the purpose, objectives, and goals of the project.
+List the key stakeholders and their roles.
+Architecture and Components:
+
+Describe the overall architecture of the project.
+Explain the different components and modules involved.
+Provide diagrams or flowcharts to illustrate the architecture.
+API Documentation:
+
+List all the APIs (endpoints) exposed by the pass-through API and process APIs.
+For each API, provide details like URL, request method (GET, POST, PUT, etc.), request parameters, request body (JSON structure), response status codes, and response body (JSON structure).
+Mention the purpose of each API and its functionality.
+Field Mapping Logic:
+
+Explain how the field mapping logic works between the pass-through API and process APIs using Velocity templates.
+Provide examples of how the field mapping is performed for different API requests and responses.
+If there are any specific rules or transformations applied during field mapping, document them here.
+Mocking with WireMock:
+
+Explain how WireMock is used for mocking API requests and responses during testing.
+Provide examples of how to set up WireMock stubs for different API endpoints.
+Document any specific configurations or features of WireMock used in your project.
+Dependencies:
+
+List all the external dependencies and libraries used in the project.
+Mention the version numbers and the purpose of each dependency.
+Deployment and Environment Setup:
+
+Document the steps to deploy the pass-through API and process APIs.
+Describe the environment setup required for running the project (e.g., databases, external services).
+Testing:
+
+Explain the different types of testing performed (unit tests, integration tests, etc.).
+Provide guidelines on how to run tests and interpret test results.
+Troubleshooting and FAQs:
+
+Include a section with common troubleshooting tips and known issues.
+Answer frequently asked questions related to the project.
+Conclusion:
+
+Summarize the key points of the documentation.
+Mention any future plans or enhancements for the project.
+References:
+
+List any external resources, documentation, or articles referenced during the project.
+Remember to use clear language, add diagrams or screenshots wherever helpful, and keep the documentation up-to-date as the project evolves. It's also a good idea to get feedback from team members and stakeholders to ensure the documentation is comprehensive and easy to understand.
+
+
+
+
+
+
 28 july ashhh
 
 import org.apache.velocity.app.VelocityEngine;
